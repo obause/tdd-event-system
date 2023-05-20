@@ -1,38 +1,32 @@
 package com.java.eventsystem.tddeventsystem;
 
 public class Booking {
-	private String identifier;
+	private int id;
     private Customer customer;
-    private Event event;
     private int bookedSeats;
     private double totalAmount;
+    private static int nextId = 0;
     
-	public Booking(String identifier, Customer customer, Event event, int bookedSeats, double totalAmount) {
+	public Booking(Customer customer, int bookedSeats, double totalAmount) {
 		super();
-		this.identifier = identifier;
+		this.id = nextId;
 		this.customer = customer;
-		this.event = event;
 		this.bookedSeats = bookedSeats;
 		this.totalAmount = totalAmount;
+		nextId++;
 	}
 	
-	public String getIdentifier() {
-		return identifier;
+	public static int getNextId() {
+		return nextId;
 	}
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+	public int getId() {
+		return id;
 	}
 	public Customer getCustomer() {
 		return customer;
 	}
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
-	}
-	public Event getEvent() {
-		return event;
-	}
-	public void setEvent(Event event) {
-		this.event = event;
 	}
 	public int getBookedSeats() {
 		return bookedSeats;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.java.eventsystem.tddeventsystem.CustomerServiceTest" time="0.029" tests="2" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0.018" tests="8" errors="0" skipped="0" failures="1">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,6 +58,16 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="getAllCustomers" classname="com.java.eventsystem.tddeventsystem.CustomerServiceTest" time="0.021"/>
-  <testcase name="createCustomer" classname="com.java.eventsystem.tddeventsystem.CustomerServiceTest" time="0"/>
+  <testcase name="createBooking" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0"/>
+  <testcase name="getAllEvents" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0"/>
+  <testcase name="createBookingTestAmount" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0.001"/>
+  <testcase name="createEvent" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0.001"/>
+  <testcase name="getWrongBooking" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0.005"/>
+  <testcase name="createBookingWithInsufficientSeats" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0.009">
+    <failure message="Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown." type="org.opentest4j.AssertionFailedError">org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+	at com.java.eventsystem.tddeventsystem.EventServiceTest.createBookingWithInsufficientSeats(EventServiceTest.java:105)
+</failure>
+  </testcase>
+  <testcase name="getBooking" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0"/>
+  <testcase name="getAvailableSeats" classname="com.java.eventsystem.tddeventsystem.EventServiceTest" time="0"/>
 </testsuite>

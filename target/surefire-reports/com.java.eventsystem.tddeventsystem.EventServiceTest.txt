@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: com.java.eventsystem.tddeventsystem.EventServiceTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.018 s <<< FAILURE! - in com.java.eventsystem.tddeventsystem.EventServiceTest
+createBookingWithInsufficientSeats  Time elapsed: 0.009 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown.
+	at com.java.eventsystem.tddeventsystem.EventServiceTest.createBookingWithInsufficientSeats(EventServiceTest.java:105)
+

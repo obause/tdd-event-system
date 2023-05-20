@@ -1,29 +1,38 @@
 package com.java.eventsystem.tddeventsystem;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.time.LocalDateTime;
 
 public class Event {
-	private String identifier;
+	private static int nextId = 0;
+	private int id;
     private String title;
     private LocalDateTime dateTime;
     private double ticketPrice;
     private int totalSeats;
+    private int availableSeats;
+    private List<Booking> bookings = new ArrayList<>();
     
-	public Event(String identifier, String title, LocalDateTime dateTime, double ticketPrice, int totalSeats) {
+	public Event(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats) {
 		super();
-		this.identifier = identifier;
+		this.id = nextId;
 		this.title = title;
 		this.dateTime = dateTime;
 		this.ticketPrice = ticketPrice;
 		this.totalSeats = totalSeats;
+		this.availableSeats = totalSeats;
+		nextId++;
 	}
 	
-	public String getIdentifier() {
-		return identifier;
+	public static int getNextId() {
+		return nextId;
 	}
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
+	
+	public int getId() {
+		return id;
 	}
+	
 	public String getTitle() {
 		return title;
 	}
@@ -47,5 +56,19 @@ public class Event {
 	}
 	public void setTotalSeats(int totalSeats) {
 		this.totalSeats = totalSeats;
+	}
+	public int getAvailableSeats() {
+		return availableSeats;
+	}
+	public void setAvailableSeats(int availableSeats) {
+		this.availableSeats = availableSeats;
+	}
+
+	public List<Booking> getBookings() {
+		return bookings;
+	}
+
+	public void setBookings(List<Booking> bookings) {
+		this.bookings = bookings;
 	}
 }

@@ -2,9 +2,10 @@ package com.java.eventsystem.tddeventsystem;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Event {
+public class Event implements Serializable {
 	private static int nextId = 0;
 	private int id;
     private String title;
@@ -16,7 +17,7 @@ public class Event {
     
 	public Event(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats) {
 		super();
-		this.id = nextId;
+		this.id = getNextId();
 		this.title = title;
 		this.dateTime = dateTime;
 		this.ticketPrice = ticketPrice;

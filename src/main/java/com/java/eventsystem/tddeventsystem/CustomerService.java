@@ -23,4 +23,10 @@ public class CustomerService {
     	List<Customer> customerList = new ArrayList<Customer>(customers.values());
         return customerList;
     }
+    
+    public void setCustomers(List<Customer> customers) {
+    	for (Customer customer : customers) {
+    		this.customers.put(customer.getName(), customer);
+    	}
+    }
 }

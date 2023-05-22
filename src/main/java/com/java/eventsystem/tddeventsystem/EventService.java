@@ -25,11 +25,6 @@ public class EventService {
         return eventsList;
 	}
 	
-	public int getTotalSeatsById(int id) {
-		Event event = events.get(id);
-		return event.getTotalSeats();
-	}
-	
 	public int getAvailableSeatsById(int id) {
 		Event event = events.get(id);
 		return event.getAvailableSeats();
@@ -39,11 +34,22 @@ public class EventService {
 		double totalAmount = event.getTicketPrice() * bookedSeats;
 		Booking booking = new Booking(customer, bookedSeats, totalAmount);
         List<Booking> bookings = event.getBookings();
-        bookings.add(booking);
         if (booking.getBookedSeats() > event.getAvailableSeats()) {
         	throw new IllegalArgumentException("Not enough seats available.");
         } else {
-        	event.setAvailableSeats(event.getAvailableSeats() - booking.getBookedSeats());
+        	Booking existingBooking = null;
+        	for (Booking bookingItem : bookings) {
+        		if (bookingItem.getCustomer().equals(customer)) {
+        			existingBooking = bookingItem;
+        		}
+        	}
+        	if (existingBooking != null) {
+        		booking.setBookedSeats(bookedSeats + existingBooking.getBookedSeats());
+    			booking.setTotalAmount(totalAmount + existingBooking.getTotalAmount());
+    			bookings.remove(existingBooking);
+        	}
+        	bookings.add(booking);
+        	event.setAvailableSeats(event.getAvailableSeats() - bookedSeats);
         	event.setBookings(bookings);
             return booking.getId();
         }
@@ -67,5 +73,11 @@ public class EventService {
 			}
 		}
 		throw new IllegalArgumentException("Booking with this ID does not exist.");
+	}
+	
+	public void setEvents(List<Event> events) {
+		for (Event event : events) {
+    		this.events.put(event.getId(), event);
+    	}
 	}
 }

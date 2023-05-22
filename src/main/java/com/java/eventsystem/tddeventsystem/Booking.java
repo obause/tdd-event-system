@@ -1,6 +1,8 @@
 package com.java.eventsystem.tddeventsystem;
 
-public class Booking {
+import java.io.Serializable;
+
+public class Booking implements Serializable {
 	private int id;
     private Customer customer;
     private int bookedSeats;
@@ -9,7 +11,7 @@ public class Booking {
     
 	public Booking(Customer customer, int bookedSeats, double totalAmount) {
 		super();
-		this.id = nextId;
+		this.id = getNextId();
 		this.customer = customer;
 		this.bookedSeats = bookedSeats;
 		this.totalAmount = totalAmount;

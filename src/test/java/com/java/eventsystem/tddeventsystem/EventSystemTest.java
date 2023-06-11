@@ -5,11 +5,12 @@ import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class EventServiceTest {
+public class EventSystemTest {
 	@Test
 	void customerModel() {
 		Customer customer = new Customer("Max Mustermann", "Addresse 1");
@@ -192,6 +193,7 @@ public class EventServiceTest {
         EventService eventService = new EventService();
         CustomerService customerService = new CustomerService();
         customerService.createCustomer("Max Mustermann", "Addresse 1");
+        customerService.createCustomer("Maxi Mustermann", "Addresse 2");
         int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         
         eventService.addBlacklist(blacklist);
@@ -199,22 +201,26 @@ public class EventServiceTest {
         Mockito.when(blacklist.isBlacklisted("Max Mustermann")).thenReturn(true);
 
         Exception exception = assertThrows(IllegalArgumentException.class, () -> eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 10));
-
         assertEquals("Customer is blacklisted", exception.getMessage());
+        
+        int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Maxi Mustermann"), 1);
+		Booking booking = eventService.getBooking(customerService.getCustomer("Maxi Mustermann"), eventService.getEventById(eventId));
+        assertEquals(bookingId, booking.getId());
     }
 	
-//	@Test
-//    void sendEmailIfBookingIsAtLeast10PercentOfTotalSeats() {
-//		CustomerService customerService = new CustomerService();
-//        customerService.createCustomer("Max Mustermann", "Addresse 1");
-//		EventService eventService = new EventService();
-//		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
-//		
-//		EmailService emailService = Mockito.mock(EmailService.class);
-//		
-//		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 20);
-//		Booking booking = eventService.getBooking(bookingId, eventService.getEventById(eventId));
-//
-//        Mockito.verify(emailService, Mockito.times(1)).sendEmail("organizer@example.com", "New Booking", "A new booking has been made for 20 seats.");
-//    }
+	@Test
+    void sendEmailIfBookingIsAtLeast10PercentOfTotalSeats() {
+		CustomerService customerService = new CustomerService();
+        customerService.createCustomer("Max Mustermann", "Addresse 1");
+		EventService eventService = new EventService();
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
+		
+		EmailService emailService = Mockito.mock(EmailService.class);
+		eventService.addEmailService(emailService);
+		
+		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 49);
+		//Booking booking = eventService.getBooking(bookingId, eventService.getEventById(eventId));
+
+        Mockito.verify(emailService, Mockito.times(1)).sendEmail("organizer@mail.de", "New Booking", "A new booking has been made with more than 10% of the total seats of the event.");
+    }
 }

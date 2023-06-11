@@ -9,13 +9,20 @@ import java.util.List;
 public class EventService {
 	private Map<Integer, Event> events = new HashMap<>();
 	private Blacklist blacklist;
-	//private EmailService emailService;
+	private EmailService emailService;
 	
 //	public EventService(Blacklist blacklist, EmailService emailService) {
 //		// Customer Service mit rein?
 //		// Daten laden?
 //		this.blacklist = blacklist;
 //		this.emailService = emailService;
+//	}
+	
+//	public EventService() {
+//		// Customer Service mit rein?
+//		// Daten laden?
+//		this.blacklist = new Blacklist();
+//		this.emailService = new EmailService();
 //	}
 	
 	public int createEvent(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats, String organizerEmail) {
@@ -68,6 +75,21 @@ public class EventService {
 //            }
         	event.setAvailableSeats(event.getAvailableSeats() - bookedSeats);
         	event.setBookings(bookings);
+        	
+        	float eventUtilization = (float) booking.getBookedSeats() / event.getTotalSeats();
+        	
+        	
+        	System.out.println("Booked seats:" + booking.getBookedSeats());
+        	System.out.println("Total seats:" + event.getTotalSeats());
+        	System.out.println("Event Utilization:" + eventUtilization);
+        	System.out.println("clac");
+        	System.out.println(booking.getBookedSeats() / event.getTotalSeats());
+        	
+        	if (emailService != null && eventUtilization >= 0.1) {
+        		emailService.sendEmail(event.getOrganizerEmail(), "New Booking", "A new booking has been made with more than 10% of the total seats of the event.");
+        		System.out.println("Email sent");
+        	}
+        	
             return booking.getId();
         }
     }
@@ -101,4 +123,9 @@ public class EventService {
 	public void addBlacklist(Blacklist blacklist) {
 		this.blacklist = blacklist;
 	}
+	
+	public void addEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
+	
 }

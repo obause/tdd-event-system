@@ -8,9 +8,18 @@ import java.util.List;
 
 public class EventService {
 	private Map<Integer, Event> events = new HashMap<>();
+	private Blacklist blacklist;
+	//private EmailService emailService;
 	
-	public int createEvent(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats) {
-		Event event = new Event(title, dateTime, ticketPrice, totalSeats);
+//	public EventService(Blacklist blacklist, EmailService emailService) {
+//		// Customer Service mit rein?
+//		// Daten laden?
+//		this.blacklist = blacklist;
+//		this.emailService = emailService;
+//	}
+	
+	public int createEvent(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats, String organizerEmail) {
+		Event event = new Event(title, dateTime, ticketPrice, totalSeats, organizerEmail);
         events.put(event.getId(), event);
         return event.getId();
     }
@@ -34,9 +43,14 @@ public class EventService {
 		double totalAmount = event.getTicketPrice() * bookedSeats;
 		Booking booking = new Booking(customer, bookedSeats, totalAmount);
         List<Booking> bookings = event.getBookings();
-        if (booking.getBookedSeats() > event.getAvailableSeats()) {
+        
+        if (blacklist != null && blacklist.isBlacklisted(booking.getCustomer().getName())) {
+            throw new IllegalArgumentException("Customer is blacklisted");
+        } 
+        else if (booking.getBookedSeats() > event.getAvailableSeats()) {
         	throw new IllegalArgumentException("Not enough seats available.");
-        } else {
+        } 
+        else {
         	Booking existingBooking = null;
         	for (Booking bookingItem : bookings) {
         		if (bookingItem.getCustomer().equals(customer)) {
@@ -49,6 +63,9 @@ public class EventService {
     			bookings.remove(existingBooking);
         	}
         	bookings.add(booking);
+//        	if (booking.getBookedSeats() >= event.getTotalSeats() * 0.10) {
+//                emailService.sendEmail(event.getOrganizerEmail(), "New Booking", "A new booking has been made for " + booking.getBookedSeats() + " seats.");
+//            }
         	event.setAvailableSeats(event.getAvailableSeats() - bookedSeats);
         	event.setBookings(bookings);
             return booking.getId();
@@ -79,5 +96,9 @@ public class EventService {
 		for (Event event : events) {
     		this.events.put(event.getId(), event);
     	}
+	}
+	
+	public void addBlacklist(Blacklist blacklist) {
+		this.blacklist = blacklist;
 	}
 }

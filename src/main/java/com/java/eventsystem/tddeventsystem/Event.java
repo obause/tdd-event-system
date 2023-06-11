@@ -14,8 +14,9 @@ public class Event implements Serializable {
     private int totalSeats;
     private int availableSeats;
     private List<Booking> bookings = new ArrayList<>();
+    private String organizerEmail;
     
-	public Event(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats) {
+	public Event(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats, String organizerEmail) {
 		super();
 		this.id = getNextId();
 		this.title = title;
@@ -23,6 +24,7 @@ public class Event implements Serializable {
 		this.ticketPrice = ticketPrice;
 		this.totalSeats = totalSeats;
 		this.availableSeats = totalSeats;
+		this.organizerEmail = organizerEmail;
 		nextId++;
 	}
 	
@@ -72,4 +74,12 @@ public class Event implements Serializable {
 	public void setBookings(List<Booking> bookings) {
 		this.bookings = bookings;
 	}
+	
+	public String getOrganizerEmail() {
+        return organizerEmail;
+    }
+	
+	public void setOrganizerEmail(String organizerEmail) {
+        this.organizerEmail = organizerEmail;
+    }
 }

@@ -1,6 +1,8 @@
 package com.java.eventsystem.tddeventsystem;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -18,7 +20,7 @@ public class EventServiceTest {
 	@Test
 	void eventModel() {
 		LocalDateTime dateTime = LocalDateTime.now();
-		Event event = new Event("Sample Event", dateTime, 100.0, 50);
+		Event event = new Event("Sample Event", dateTime, 100.0, 50, "organizer@mail.de");
 		assertEquals("Sample Event", event.getTitle());
 		assertEquals(dateTime, event.getDateTime());
 		assertEquals(100.0, event.getTicketPrice());
@@ -56,15 +58,15 @@ public class EventServiceTest {
 	@Test
     void createEvent() {
         EventService service = new EventService();
-        int eventId = service.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+        int eventId = service.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         assertEquals("Sample Event", service.getEventById(eventId).getTitle());
     }
 	
 	@Test
     void getAllEvents() {
 		EventService service = new EventService();
-		int event1Id = service.createEvent("Sample Event 1", LocalDateTime.now(), 100.0, 50);
-        int event2Id = service.createEvent("Sample Event 2", LocalDateTime.now(), 200.0, 25);
+		int event1Id = service.createEvent("Sample Event 1", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
+        int event2Id = service.createEvent("Sample Event 2", LocalDateTime.now(), 200.0, 25, "organizer@mail.de");
         
         List<Event> events = service.getAllEvents();
         assertEquals(2, events.size());
@@ -78,7 +80,7 @@ public class EventServiceTest {
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
 		EventService eventService = new EventService();
-		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
 		assertEquals(50, eventService.getAvailableSeatsById(eventId));
 		eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 10);
         assertEquals(40, eventService.getAvailableSeatsById(eventId));
@@ -90,7 +92,7 @@ public class EventServiceTest {
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
 		EventService eventService = new EventService();
-		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
 		
 		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 1);
 		
@@ -103,7 +105,7 @@ public class EventServiceTest {
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
 		EventService eventService = new EventService();
-		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
 		
 		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 1);
 		
@@ -117,7 +119,7 @@ public class EventServiceTest {
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
 		EventService eventService = new EventService();
-		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
 		
 		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 2);
 		
@@ -132,7 +134,7 @@ public class EventServiceTest {
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
 		EventService eventService = new EventService();
-		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
 		
 		int bookingId = 999;
 
@@ -143,7 +145,7 @@ public class EventServiceTest {
 	@Test
     void createBookingWithInsufficientSeats() {
         EventService eventService = new EventService();
-        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         CustomerService customerService = new CustomerService();
         customerService.createCustomer("Max Mustermann", "Addresse 1"); 
         
@@ -153,7 +155,7 @@ public class EventServiceTest {
 	@Test
     void createmultipleBookingsWithSameCustomer() {
         EventService eventService = new EventService();
-        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         CustomerService customerService = new CustomerService();
         customerService.createCustomer("Max Mustermann", "Addresse 1");
         
@@ -171,37 +173,48 @@ public class EventServiceTest {
         DataStore dataStore = new DataStore();
         CustomerService customerService = new CustomerService();
         EventService eventService = new EventService();
-        //BookingService bookingService = new BookingService(eventService);
         customerService.createCustomer("Max Mustermann", "Addresse 1");
-        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 10);
         
         dataStore.saveData(customerService, eventService);
         CustomerService loadedCustomerService = new CustomerService();
         EventService loadedEventService = new EventService();
-        //BookingService loadedBookingService = new BookingService(loadedEventService);
         dataStore.loadData(loadedCustomerService, loadedEventService);
         
         assertEquals(1, loadedCustomerService.getAllCustomers().size());
         assertEquals(1, loadedEventService.getAllEvents().size());
-        //assertEquals(1, loadedBookingService.getAllBookings().size());
     }
 	
 	@Test
     void rejectBookingIfCustomerIsBlacklisted() {
-        BlacklistService blacklistService = Mockito.mock(BlacklistService.class);
+        Blacklist blacklist = Mockito.mock(Blacklist.class);
         EventService eventService = new EventService();
         CustomerService customerService = new CustomerService();
-        //BookingService service = new BookingService(eventService, blacklistService);
         customerService.createCustomer("Max Mustermann", "Addresse 1");
-        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50);
+        int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
         
-        Mockito.when(blacklistService.isBlacklisted("John Doe")).thenReturn(true);
+        eventService.addBlacklist(blacklist);
+        
+        Mockito.when(blacklist.isBlacklisted("Max Mustermann")).thenReturn(true);
 
-        Exception exception = assertThrows(Exception.class, () -> {
-        	eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 10);
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 10));
 
         assertEquals("Customer is blacklisted", exception.getMessage());
     }
+	
+//	@Test
+//    void sendEmailIfBookingIsAtLeast10PercentOfTotalSeats() {
+//		CustomerService customerService = new CustomerService();
+//        customerService.createCustomer("Max Mustermann", "Addresse 1");
+//		EventService eventService = new EventService();
+//		int eventId = eventService.createEvent("Sample Event", LocalDateTime.now(), 100.0, 50, "organizer@mail.de");
+//		
+//		EmailService emailService = Mockito.mock(EmailService.class);
+//		
+//		int bookingId = eventService.createBooking(eventService.getEventById(eventId), customerService.getCustomer("Max Mustermann"), 20);
+//		Booking booking = eventService.getBooking(bookingId, eventService.getEventById(eventId));
+//
+//        Mockito.verify(emailService, Mockito.times(1)).sendEmail("organizer@example.com", "New Booking", "A new booking has been made for 20 seats.");
+//    }
 }

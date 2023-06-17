@@ -8,22 +8,9 @@ import java.util.List;
 
 public class EventService {
 	private Map<Integer, Event> events = new HashMap<>();
+	//private nextEventId = 0;
 	private Blacklist blacklist;
 	private EmailService emailService;
-	
-//	public EventService(Blacklist blacklist, EmailService emailService) {
-//		// Customer Service mit rein?
-//		// Daten laden?
-//		this.blacklist = blacklist;
-//		this.emailService = emailService;
-//	}
-	
-//	public EventService() {
-//		// Customer Service mit rein?
-//		// Daten laden?
-//		this.blacklist = new Blacklist();
-//		this.emailService = new EmailService();
-//	}
 	
 	public int createEvent(String title, LocalDateTime dateTime, double ticketPrice, int totalSeats, String organizerEmail) {
 		Event event = new Event(title, dateTime, ticketPrice, totalSeats, organizerEmail);
@@ -78,13 +65,6 @@ public class EventService {
         	
         	float eventUtilization = (float) booking.getBookedSeats() / event.getTotalSeats();
         	
-        	
-        	System.out.println("Booked seats:" + booking.getBookedSeats());
-        	System.out.println("Total seats:" + event.getTotalSeats());
-        	System.out.println("Event Utilization:" + eventUtilization);
-        	System.out.println("clac");
-        	System.out.println(booking.getBookedSeats() / event.getTotalSeats());
-        	
         	if (emailService != null && eventUtilization >= 0.1) {
         		emailService.sendEmail(event.getOrganizerEmail(), "New Booking", "A new booking has been made with more than 10% of the total seats of the event.");
         		System.out.println("Email sent");
@@ -101,7 +81,7 @@ public class EventService {
 				return booking;
 			}
 		}
-		throw new IllegalArgumentException("Booking with this ID does not exist.");
+		throw new IllegalArgumentException("A booking of this customer does not exist.");
 	}
 	
 	public Booking getBooking(int id, Event event) {

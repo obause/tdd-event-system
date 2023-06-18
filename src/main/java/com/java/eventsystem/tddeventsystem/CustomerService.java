@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomerService {
-	private Map<String, Customer> customers = new HashMap<>();
+	private Map<String, Customer> customers = new HashMap<>(); // { "Max Mustermann": customerObjekt1, "Peter Müller": customerObjekt2 }
 
     public void createCustomer(String name, String address) {
     	Customer customer = new Customer(name, address);
